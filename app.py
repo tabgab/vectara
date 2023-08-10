@@ -1,10 +1,11 @@
 #This is a vectara example
 
 import streamlit as st 
-from langchain.document_loaders import TextLoader
+#from langchain.document_loaders import TextLoader
 from langchain.embeddings import OpenAIEmbeddings
+from langchain.embeddings import FakeEmbeddings
 from langchain.llms import OpenAI 
-from langchain.text_splitter import CharacterTextSplitter
+#from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import Vectara
 from langchain.chains import RetrievalQA
 import os
@@ -26,13 +27,28 @@ def langchain_func(file, question):
     answer = qa({"query": question})
     return answer
 
-
+###
 # Streamlit Code
-st.title("Langchain + Vectara Demo App")
+###
+st.title("Ask OMNEST / OMNeT++ Documentation Here")
 
-file_uploader = st.file_uploader("Upload your File", type=['txt'])
+def process_question(question):
+    # This is a placeholder function. You can replace it with your processing logic.
+    return f"Result for the question: {question}"
 
-if file_uploader is not None:
+# Create a text input for users to enter their question
+user_question = st.text_input("Enter your question:")
+
+# Create a button that, when clicked, processes the user's question
+if st.button('Submit'):
+    result = process_question(user_question)
+    
+    # Display the result in a scrollable text area
+    st.text_area("Result:", value=result, height=200)
+
+#file_uploader = st.file_uploader("Upload your File", type=['txt'])
+
+"""if file_uploader is not None:
     file_name = file_uploader.name
     with open(os.path.join(file_name),"wb") as f:
             f.write(file_uploader.getbuffer())
@@ -41,4 +57,4 @@ if file_uploader is not None:
         if len(question) > 0:
             answer = langchain_func(file_name, question)
             st.info("Your Question: "+ question)
-            st.success("Your Answer: "+ answer['result'])
+            st.success("Your Answer: "+ answer['result'])"""
