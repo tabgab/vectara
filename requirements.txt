@@ -1,0 +1,6 @@
+PIL
+requests
+json
+os
+dotenv
+base64
