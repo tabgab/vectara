@@ -2,6 +2,5 @@ PIL
 requests
 json
 os
-openai
 dotenv
 base64
