@@ -2,7 +2,7 @@
 import streamlit as st
 from PIL import Image
 import requests
-import json
+#import json
 import os
 import openai
 from dotenv import load_dotenv
