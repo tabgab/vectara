@@ -2,6 +2,6 @@ PIL
 requests
 json
 os
-openai
+openai==0.27.8
 dotenv
 base64
