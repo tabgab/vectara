@@ -4,7 +4,6 @@ from PIL import Image
 import requests
 import json
 import os
-from colorama import Fore
 import openai
 from dotenv import load_dotenv
 
