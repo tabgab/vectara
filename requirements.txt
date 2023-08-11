@@ -1,7 +1,0 @@
-PIL
-requests
-json
-os
-openai==0.27.8
-dotenv
-base64
