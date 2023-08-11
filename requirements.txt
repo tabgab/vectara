@@ -1,5 +1,4 @@
 openai==0.27.8
 Pillow
 requests
-dotenv
 base64
