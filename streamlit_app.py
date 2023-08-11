@@ -7,9 +7,12 @@ import os
 from colorama import Fore
 import openai
 from dotenv import load_dotenv
+
+st.cache_data.clear()
 # Using Streamlit's caching mechanism to load environment variables and keep them in memory
-@st.cache(allow_output_mutation=True)
+@st.cache_data(ttl=36000)
 def load_env_vars():
+    
     load_dotenv("./.env")  # Replace with the actual path to your .env file
     return {
         "OPENAI_API_KEY": os.getenv('OPENAI_API_KEY'),
@@ -18,11 +21,21 @@ def load_env_vars():
         "VECTARA_API_KEY": os.getenv('VECTARA_API_KEY')
     }
 
+
+
+
 env_vars = load_env_vars()
 OPENAI_API_KEY = env_vars["OPENAI_API_KEY"]
+#OPENAI_API_KEY = "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"
 VECTARA_CUSTOMER_ID = env_vars["VECTARA_CUSTOMER_ID"]
 VECTARA_CORPUS_ID = env_vars["VECTARA_CORPUS_ID"]
 VECTARA_API_KEY = env_vars["VECTARA_API_KEY"]
+
+if OPENAI_API_KEY==None:
+    OPENAI_API_KEY = ""
+
+# LOGGIG HERE
+#logvar = "Init. OPENAI KEY IS NOW: "+ OPENAI_API_KEY
 
 # Initialize the OpenAI API with the key
 openai.api_key = OPENAI_API_KEY
@@ -144,42 +157,56 @@ header_html = f'''
 '''
 st.markdown(header_html, unsafe_allow_html=True)
 
+#st.text_area(logvar)
 
 #st.title("OMNEST / OMNeT++ Sage")
 
-# Text input for user's question
-user_question = st.text_input("Enter your question:")
 
-if st.button("Submit"):
-    set_nested_query(querryarray, user_question)
-    st.write("Questions is: " + get_nested_query(querryarray))
+if len(OPENAI_API_KEY)<2:
+    OPENAI_API_KEY= st.text_input("Please enter a valid OPENAI KEY to proceed.")
+    st.text("If you provide an invalid key, this will not work and throw an error.")
+if len(OPENAI_API_KEY)>5:
+  openai.api_key=OPENAI_API_KEY
+  # Text input for user's question
+  
+  user_question = st.text_input("Enter your question:")
+  #VERBOSE VECTARA OUTPUT HERE
+  verbose = st.checkbox('Display verbose output with source text.')
 
-    # Sending query to Vectara here
-    response = requests.request("POST", url, headers=headers, data=json.dumps(querryarray))
-    data = response.json()
+  if st.button("Submit"):
+      set_nested_query(querryarray, user_question)
+      st.write("Questions is: " + get_nested_query(querryarray))
 
-    # Filtering out the text from the response JSON received from Vectara
-    text_contents = ' '.join([item['text'] for response in data['responseSet'] for item in response['response']])
+      # Sending query to Vectara here
+      response = requests.request("POST", url, headers=headers, data=json.dumps(querryarray))
+      data = response.json()
 
-    # Assemble the query for the AI
-    prelude = ("Give a detailed and factual answer of at least 150 words to the question"
-               ",give the relevant section names in the documentation whenever possible: ")
-    afterwords = "Do not make up anything, use the provided text prompt only! Please list the exact refrences you use."
-    originalquestion = get_nested_query(querryarray)
-    question = prelude + originalquestion + afterwords
+      # Filtering out the text from the response JSON received from Vectara
+      text_contents = ' '.join([item['text'] for response in data['responseSet'] for item in response['response']])
+
+      if verbose:
+        if len(text_contents)>1:
+            st.text_area(text_contents)
+
+      # Assemble the query for the AI
+      prelude = ("Give a detailed and factual answer of at least 150 words to the question"
+                ",give the relevant section names in the documentation whenever possible: ")
+      afterwords = "Do not make up anything, use the provided text prompt only! Please list the exact refrences you use."
+      originalquestion = get_nested_query(querryarray)
+      question = prelude + originalquestion + afterwords
 
 
-    # Submit the question and document to ChatGPT (assuming you have the necessary openai setup done)
-    response = openai.Completion.create(
-      model="text-davinci-003",
-      prompt=f"{text_contents}\n\nQ: {question}\nA:",
-      max_tokens=1500,
-      n=1,
-      stop=None,
-      temperature=0.0
-    )
+      # Submit the question and document to ChatGPT (assuming you have the necessary openai setup done)
+      response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=f"{text_contents}\n\nQ: {question}\nA:",
+        max_tokens=1500,
+        n=1,
+        stop=None,
+        temperature=0.0
+      )
 
-    # Extract and display the answer
-    answer = response.choices[0].text.strip()
-    st.text_area("Answer:", value=answer, height=600)
+      # Extract and display the answer
+      answer = response.choices[0].text.strip()
+      st.text_area("Answer:", value=answer, height=600)
 
