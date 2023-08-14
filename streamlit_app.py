@@ -8,7 +8,7 @@ import openai
 
 st.cache_data.clear()
 # Using Streamlit's caching mechanism to load environment variables and keep them in memory
-@st.cache_data(ttl=36000)
+@st.cache_data(ttl=360000)
 def load_env_vars():
     
     load_dotenv("./.env")  # Replace with the actual path to your .env file
