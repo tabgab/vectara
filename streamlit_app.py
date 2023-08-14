@@ -159,29 +159,24 @@ header_html = f'''
 '''
 st.markdown(header_html, unsafe_allow_html=True)
 
-instuctions = """This is a chatbot interface where you can ask about OMNEST/OMNeT++ and the INET Framework. 
-        
-        Our hope is that this chatbot may give you some pointers on where to find 
-        the answer to your question, and if you are lucky, even answer it.
-        We have tried to ensure the AI uses only the documentation to answer your 
-        question, and do so as accurately as possible.
-        Still, as with AI responses in general, the AI could be entirely wrong, just 
-        a bit wrong, or correct, but you should always check your answers for errors. 
-        Use this entirely at your own risk, there is no warrany, implied or otherwise 
-        for the correctness of the answers, or that this is fit for any use at all.
+instuctions = """This is a chatbot interface where you can ask about OMNEST/OMNeT++ 
+and the INET Framework. Our hope is that this chatbot may give you some 
+pointers on where to find the answer to your question, and if you are lucky, 
+even answer it.
 
-        There is a Vectara Corpus feeding an OpenAI chatbot behind this chat interface. 
-        The complete OMNEST/OMNeT++ documentation, the INET Framework documentation and 
-        showcases have been fed into and indexed in the Vectara Corpus. When you submit 
-        a querry, first this database is quizzed for relevant sections and that is passed 
-        in to the AI to generata an answer. You can ask about OMNEST/OMNeT++ 
-        as well as the INET Framework.
+We have tried to ensure the AI uses only the documentation to answer your
+question and do so as accurately as possible. **Still, as with AI responses in general, the AI could be entirely wrong, just a bit wrong, or correct, but you should always check your answers for errors.**
 
-        If you check the checkbox for verbose data, you will also see what the Vectara 
-        database output was from the docs."""
+**Use this entirely at your own risk, there is no warranty, implied or otherwise for the correctness of the answers, or that this is fit for any use at all.**
+
+There is a Vectara Corpus feeding an OpenAI chatbot behind this chat interface.
+The complete OMNEST/OMNeT++ documentation, the INET Framework documentation, and showcases have been fed into and indexed in the Vectara Corpus. When you submit a query, first this database is quizzed for relevant sections and that is passed into the AI to generate an answer. You can ask about OMNEST/OMNeT++ as well as the INET Framework.
+
+If you check the checkbox for verbose data, you will also see what the Vectara
+database output was from the docs."""
 
 with st.expander("Display instructions"):
-    st.write(instuctions)
+    st.markdown(instuctions)
 
 #This function allows us to count the number of tokens in the question before submitting them (and getting an error)
 
