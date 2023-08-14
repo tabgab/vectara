@@ -125,7 +125,7 @@ st.markdown("""
         }
         .header-container {
             display: flex;
-            text-color:#FFFFFF
+            font-color:#FFFFFF
             align-items: center;  # Vertically center the title with the image
             position: absolute;
             top: 0px;
