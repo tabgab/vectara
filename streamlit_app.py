@@ -5,11 +5,8 @@ import requests
 import json
 import os
 import openai
-from tiktoken import TokenCounter
-from openai import GPT3Tokenizer
+from tokenizers import Tokenizer
 
-tokenizer = GPT3Tokenizer()
-counter = TokenCounter()
 
 st.cache_data.clear()
 # Using Streamlit's caching mechanism to load environment variables and keep them in memory
@@ -166,8 +163,10 @@ st.markdown(header_html, unsafe_allow_html=True)
 #This function allows us to count the number of tokens in the question before submitting them (and getting an error)
 
 def count_tokens(text):
-    encoded_text = tokenizer.encode(text)
-    return counter.count_tokens(encoded_text)
+    tokenizer = Tokenizer.from_str()
+    #from_file(tokenizers.ByteLevelBPETokenizer())
+    tokens = tokenizer.encode(text)
+    return len(tokens.ids)
 
 ####################################################################
 # Check if API keys are defined, and ask for them if they are not. #
