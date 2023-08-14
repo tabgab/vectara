@@ -5,7 +5,6 @@ import requests
 #import json
 import os
 import openai
-from dotenv import load_dotenv
 
 st.cache_data.clear()
 # Using Streamlit's caching mechanism to load environment variables and keep them in memory
