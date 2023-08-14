@@ -123,6 +123,7 @@ st.markdown("""
         body, .stApp, .stApp .stReportView, .stApp .stReportView .stPane, .stApp .stReportView .stBlock {
             background-color: #444654 !important;  # Change to your desired color
         }
+        <h1> color: white </h1>
         .header-container {
             display: flex;
             font-color:#FFFFFF
