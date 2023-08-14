@@ -162,20 +162,20 @@ st.markdown(header_html, unsafe_allow_html=True)
 ####################################################################
 # Check if API keys are defined, and ask for them if they are not. #
 ####################################################################
-if len(OPENAI_API_KEY)<2:
-    OPENAI_API_KEY= st.text_input("Please enter a valid OPENAI KEY to proceed.")
-    st.text("If you provide an invalid key, this will not work and throw an error.")
-if len(OPENAI_API_KEY)>5:
-  openai.api_key=OPENAI_API_KEY
-
 if len(VECTARA_API_KEY)<2:
     VECTARA_API_KEY= st.text_input("Please enter a valid VECTARA API KEY to proceed.")
     st.text("If you provide an invalid key, this will not work and throw an error.")
+if len(OPENAI_API_KEY)<2:
+    OPENAI_API_KEY= st.text_input("Please enter a valid OPENAI KEY to proceed.")
+    st.text("If you provide an invalid key, this will not work and throw an error.")
+
+#Nesting question handling here to avoid calling "espensive" OpenAI without an API KEY.
+if len(OPENAI_API_KEY)>5:
+  openai.api_key=OPENAI_API_KEY
   
-  
-######################################
-#   # Text input for user's question #
-######################################
+  ######################################
+  #   # Text input for user's question #
+  ######################################
 
   user_question = st.text_input("Enter your question:")
   #VERBOSE VECTARA OUTPUT HERE
