@@ -5,6 +5,7 @@ import requests
 import json
 import os
 import openai
+from tiktoken import Tokenizer
 
 st.cache_data.clear()
 # Using Streamlit's caching mechanism to load environment variables and keep them in memory
@@ -158,7 +159,10 @@ st.markdown(header_html, unsafe_allow_html=True)
 
 #st.text_area(logvar)
 
-#st.title("OMNEST / OMNeT++ Sage")
+#This function allows us to count the number of tokens in the question before submitting them (and getting an error)
+def count_tokens(text):
+    tokenizer = Tokenizer()
+    return len(list(tokenizer.tokenize(text)))
 
 ####################################################################
 # Check if API keys are defined, and ask for them if they are not. #
@@ -186,6 +190,8 @@ if len(OPENAI_API_KEY)>5:
       set_nested_query(querryarray, user_question)
       st.write("Questions is: " + get_nested_query(querryarray))
 
+      #TODO COUNT TOKENS HERE!!!!! MAKE IF, NEST THE REST INSIDE! 4097
+     
       # Sending query to Vectara here
       response = requests.request("POST", url, headers=headers, data=json.dumps(querryarray))
       data = response.json()
@@ -204,18 +210,21 @@ if len(OPENAI_API_KEY)>5:
       originalquestion = get_nested_query(querryarray)
       question = prelude + originalquestion + afterwords
 
-
-      # Submit the question and document to ChatGPT (assuming you have the necessary openai setup done)
-      response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=f"{text_contents}\n\nQ: {question}\nA:",
-        max_tokens=1500,
-        n=1,
-        stop=None,
-        temperature=0.0
-      )
-
-      # Extract and display the answer
-      answer = response.choices[0].text.strip()
-      st.text_area("Answer:", value=answer, height=600)
+      test_tokens = f"{text_contents}\n\nQ: {question}\nA:"
+      numtokens = count_tokens(test_tokens)
+      if numtokens<4097:
+        # Submit the question and document to ChatGPT (assuming you have the necessary openai setup done)
+        response = openai.Completion.create(
+          model="text-davinci-003",
+          prompt=f"{text_contents}\n\nQ: {question}\nA:",
+          max_tokens=1500,
+          n=1,
+          stop=None,
+          temperature=0.0
+        )
+        # Extract and display the answer
+        answer = response.choices[0].text.strip()
+        st.text_area("Answer:", value=answer, height=600)
+      else:
+        st.text_area("I am sorry, your query exceeds the model's capabilities. The maximum tokens must be 4097. You submitted: "+numtokens+" Please change the question to reduce this.")
 
