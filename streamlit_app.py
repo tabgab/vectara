@@ -125,7 +125,7 @@ st.markdown("""
         }
         .header-container {
             display: flex;
-            text-color:#FFFFFFFF
+            text-color:#FFFFFF
             align-items: center;  # Vertically center the title with the image
             position: absolute;
             top: 0px;
@@ -150,7 +150,7 @@ base64_img_str = image_to_base64(image_path)
 header_html = f'''
 <div class="header-container">
     <img src="data:image/jpeg;base64,{base64_img_str}" class="top-left-img">
-    <h1>:white[OMNEST / OMNeT++ Sage]</h1>
+    <h1>OMNEST / OMNeT++ Sage</h1>
 </div>
 '''
 st.markdown(header_html, unsafe_allow_html=True)
