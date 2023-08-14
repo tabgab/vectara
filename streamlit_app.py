@@ -5,7 +5,8 @@ import requests
 import json
 import os
 import openai
-from tokenizers import Tokenizer
+import tiktoken
+
 
 
 st.cache_data.clear()
@@ -162,11 +163,11 @@ st.markdown(header_html, unsafe_allow_html=True)
 
 #This function allows us to count the number of tokens in the question before submitting them (and getting an error)
 
+enc = tiktoken.encoding_for_model("text-davinci-003")
 def count_tokens(text):
-    tokenizer = Tokenizer.from_str()
-    #from_file(tokenizers.ByteLevelBPETokenizer())
-    tokens = tokenizer.encode(text)
-    return len(tokens.ids)
+    tokens = tiktoken.get_encoding(enc).encode(text)
+    return len(tokens)
+
 
 ####################################################################
 # Check if API keys are defined, and ask for them if they are not. #
