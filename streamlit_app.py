@@ -163,7 +163,7 @@ st.markdown(header_html, unsafe_allow_html=True)
 
 #This function allows us to count the number of tokens in the question before submitting them (and getting an error)
 
-enc = tiktoken.encoding_for_model("text-davinci-003")
+enc = "cl100k_base"
 def count_tokens(text):
     tokens = tiktoken.get_encoding(enc).encode(text)
     return len(tokens)
