@@ -5,7 +5,7 @@ import requests
 import json
 import os
 import openai
-from tiktoken import Tokenizer
+from tiktoken import Tokenizer, tokenizers
 
 st.cache_data.clear()
 # Using Streamlit's caching mechanism to load environment variables and keep them in memory
@@ -160,9 +160,11 @@ st.markdown(header_html, unsafe_allow_html=True)
 #st.text_area(logvar)
 
 #This function allows us to count the number of tokens in the question before submitting them (and getting an error)
+
 def count_tokens(text):
-    tokenizer = Tokenizer()
-    return len(list(tokenizer.tokenize(text)))
+    tokenizer = Tokenizer(tokenizer=tokenizers.ByteLevelBPETokenizer())
+    tokens = tokenizer.encode(text)
+    return len(tokens.ids)
 
 ####################################################################
 # Check if API keys are defined, and ask for them if they are not. #
@@ -226,5 +228,6 @@ if len(OPENAI_API_KEY)>5:
         answer = response.choices[0].text.strip()
         st.text_area("Answer:", value=answer, height=600)
       else:
-        st.text_area("I am sorry, your query exceeds the model's capabilities. The maximum tokens must be 4097. You submitted: "+numtokens+" Please change the question to reduce this.")
+        st.text_area("I am sorry, your query exceeds the model's capabilities. The maximum tokens must be 4097. You submitted: "+numtokens+
+                     " Please change the question to reduce this.")
 
