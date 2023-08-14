@@ -232,6 +232,5 @@ if len(OPENAI_API_KEY)>5:
         st.text_area("Answer:", value=answer, height=600)
       else:
         st.error("Too many tokens submitted error! I am sorry, your query exceeds the model's capabilities. The maximum tokens must be 4097. You submitted: "+str(numtokens)+" Please change the question to reduce this.", icon="🚨")
-        st.text_area("I am sorry, your query exceeds the model's capabilities. The maximum tokens must be 4097. You submitted: "+str(numtokens)+
-                     " Please change the question to reduce this.")
+
 
