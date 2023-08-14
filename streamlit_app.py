@@ -22,13 +22,12 @@ def load_env_vars():
 
 
 
-
-env_vars = load_env_vars()
-OPENAI_API_KEY = env_vars["OPENAI_API_KEY"]
-#OPENAI_API_KEY = "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"
-VECTARA_CUSTOMER_ID = env_vars["VECTARA_CUSTOMER_ID"]
-VECTARA_CORPUS_ID = env_vars["VECTARA_CORPUS_ID"]
-VECTARA_API_KEY = env_vars["VECTARA_API_KEY"]
+#Changed from env_vars to the streamlit secrets system for streamlit deployment.
+#env_vars = load_env_vars()
+OPENAI_API_KEY = st.secrets.OPENAI_API_KEY
+VECTARA_CUSTOMER_ID = st.secrets.VECTARA_CUSTOMER_ID
+VECTARA_CORPUS_ID = st.secrets.VECTARA_CORPUS_ID
+VECTARA_API_KEY = st.secrets.VECTARA_API_KEY
 
 if OPENAI_API_KEY==None:
     OPENAI_API_KEY = ""
@@ -160,14 +159,24 @@ st.markdown(header_html, unsafe_allow_html=True)
 
 #st.title("OMNEST / OMNeT++ Sage")
 
-
+####################################################################
+# Check if API keys are defined, and ask for them if they are not. #
+####################################################################
 if len(OPENAI_API_KEY)<2:
     OPENAI_API_KEY= st.text_input("Please enter a valid OPENAI KEY to proceed.")
     st.text("If you provide an invalid key, this will not work and throw an error.")
 if len(OPENAI_API_KEY)>5:
   openai.api_key=OPENAI_API_KEY
-  # Text input for user's question
+
+if len(VECTARA_API_KEY)<2:
+    VECTARA_API_KEY= st.text_input("Please enter a valid VECTARA API KEY to proceed.")
+    st.text("If you provide an invalid key, this will not work and throw an error.")
   
+  
+######################################
+#   # Text input for user's question #
+######################################
+
   user_question = st.text_input("Enter your question:")
   #VERBOSE VECTARA OUTPUT HERE
   verbose = st.checkbox('Display verbose output with source text.')
