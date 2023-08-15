@@ -9,6 +9,8 @@ import tiktoken
 import pandas as pd
 from datetime import datetime
 
+st.cache_data.clear()
+
 #Load google sheet to insert question into. Collecting questions here.
 @st.cache_data(ttl=600)
 def load_data(sheets_url):
@@ -17,7 +19,7 @@ def load_data(sheets_url):
 df = load_data(st.secrets["public_gsheets_url"])
 
 
-st.cache_data.clear()
+
 # Using Streamlit's caching mechanism to load environment variables and keep them in memory
 @st.cache_data(ttl=360000)
 def load_env_vars():
