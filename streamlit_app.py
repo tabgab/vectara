@@ -9,6 +9,7 @@ import tiktoken
 from google.oauth2 import service_account
 from gsheetsdb import connect
 import gspread
+from datetime import datetime
 
 st.cache_data.clear()
 
@@ -37,7 +38,9 @@ def addrowtoGsheet(rowtext):
     GSHEETS_URL = st.secrets['public_gsheets_url']
     client = gspread.authorize(credentials)
     sheet = client.open_by_url(GSHEETS_URL).sheet1
-    sheet.update('B1', rowtext)
+    #sheet.update('B1', rowtext)
+    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    sheet.append_row(current_time, rowtext)
     
     
 
