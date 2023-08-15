@@ -3,4 +3,5 @@ Pillow
 requests
 tiktoken
 gsheetsdb==0.1.13.1
-oauth2 == 1.9.0.post1
+oauth2 == 1.24.0
+gspread == 5.10.0
