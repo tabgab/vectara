@@ -6,10 +6,41 @@ import json
 import os
 import openai
 import tiktoken
-
-
+from google.oauth2 import service_account
+from gsheetsdb import connect
+import gspread
 
 st.cache_data.clear()
+
+# Create a connection object.
+credentials = service_account.Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"],
+    scopes=[
+        "https://www.googleapis.com/auth/spreadsheets",
+    ],
+)
+conn = connect(credentials=credentials)
+
+
+# Perform SQL query on the Google Sheet.
+# Uses st.cache_data to only rerun when the query changes or after 10 min.
+@st.cache_data(ttl=6000)
+def run_query(query):
+    rows = conn.execute(query, headers=1)
+    rows = rows.fetchall()
+    return rows
+
+sheet_url = st.secrets["private_gsheets_url"]
+rows = run_query(f'SELECT * FROM "{sheet_url}"')
+
+def addrowtoGsheet(rowtext):
+    GSHEETS_URL = st.secretsp['public_gsheets_url']
+    client = gspread.authorize(credentials)
+    sheet = client.open_by_url(GSHEETS_URL).sheet1
+    sheet.update('B1', rowtext)
+    
+    
+
 # Using Streamlit's caching mechanism to load environment variables and keep them in memory
 @st.cache_data(ttl=360000)
 def load_env_vars():
@@ -255,6 +286,7 @@ if len(OPENAI_API_KEY)>5:
         answer = response.choices[0].text.strip()
         st.text_area("Answer:", value=answer, height=600)
         st.markdown(disclaimer)
+        addrowtoGsheet(get_nested_query(querryarray))
       else:
         st.error("Too many tokens submitted error! I am sorry, your query exceeds the model's capabilities. The maximum tokens must be 4097. You submitted: "+str(numtokens)+" Please change the question to reduce this.", icon="🚨")
 
