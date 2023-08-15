@@ -238,7 +238,7 @@ def is_valid_api_key(api_key):
         # Handle different types of errors (e.g., authentication, rate limits, etc.)
         if "authentication" in str(e).lower():
             return False
-        raise  # If it's another type of error, re-raise it
+        
 
 
 ####################################################################
