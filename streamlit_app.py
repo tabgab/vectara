@@ -274,8 +274,6 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
     if st.button("Submit"):
         set_nested_query(querryarray, user_question)
         st.write("Questions is: " + get_nested_query(querryarray))
-
-        #TODO COUNT TOKENS HERE!!!!! MAKE IF, NEST THE REST INSIDE! 4097
       
         # Sending query to Vectara here
         response = requests.request("POST", url, headers=headers, data=json.dumps(querryarray))
