@@ -69,9 +69,6 @@ VECTARA_API_KEY = st.secrets.VECTARA_API_KEY
 if OPENAI_API_KEY==None:
     OPENAI_API_KEY = ""
 
-# LOGGIG HERE
-#logvar = "Init. OPENAI KEY IS NOW: "+ OPENAI_API_KEY
-
 # Initialize the OpenAI API with the key
 openai.api_key = OPENAI_API_KEY
 
@@ -245,54 +242,61 @@ if len(OPENAI_API_KEY)>5:
   ######################################
   #   # Text input for user's question #
   ######################################
+  def disablebutton(b):
+      st.session_state["disabled"] =b
+  
+  def enablebutton(b):
+      st.session_state["enabled"] = b
 
   user_question = st.text_input("Enter your question:")
-  #VERBOSE VECTARA OUTPUT HERE
-  verbose = st.checkbox('Display verbose output with source text.')
+  if user_question:
+    #VERBOSE VECTARA OUTPUT HERE
+    verbose = st.checkbox('Display verbose output with source text.')
 
-  if st.button("Submit"):
-      set_nested_query(querryarray, user_question)
-      st.write("Questions is: " + get_nested_query(querryarray))
+    if st.button("Submit"):
+        set_nested_query(querryarray, user_question)
+        st.write("Questions is: " + get_nested_query(querryarray))
 
-      #TODO COUNT TOKENS HERE!!!!! MAKE IF, NEST THE REST INSIDE! 4097
-     
-      # Sending query to Vectara here
-      response = requests.request("POST", url, headers=headers, data=json.dumps(querryarray))
-      data = response.json()
+        #TODO COUNT TOKENS HERE!!!!! MAKE IF, NEST THE REST INSIDE! 4097
+      
+        # Sending query to Vectara here
+        response = requests.request("POST", url, headers=headers, data=json.dumps(querryarray))
+        data = response.json()
 
-      # Filtering out the text from the response JSON received from Vectara
-      text_contents = ' '.join([item['text'] for response in data['responseSet'] for item in response['response']])
+        # Filtering out the text from the response JSON received from Vectara
+        text_contents = ' '.join([item['text'] for response in data['responseSet'] for item in response['response']])
 
-      if verbose:
-        if len(text_contents)>1:
-            st.text_area(text_contents)
+        if verbose:
+          if len(text_contents)>1:
+              st.text_area(text_contents)
 
-      # Assemble the query for the AI
-      prelude = ("Give a detailed and factual answer of at least 150 words to the question"
-                ",give the relevant section names in the documentation whenever possible: ")
-      afterwords = "Do not make up anything, use the provided text prompt only! Please list the exact refrences you use."
-      originalquestion = get_nested_query(querryarray)
-      question = prelude + originalquestion + afterwords
+        # Assemble the query for the AI
+        prelude = ("Give a detailed and factual answer of at least 150 words to the question"
+                  ",give the relevant section names in the documentation whenever possible: ")
+        afterwords = "Do not make up anything, use the provided text prompt only! Please list the exact refrences you use."
+        originalquestion = get_nested_query(querryarray)
+        question = prelude + originalquestion + afterwords
 
-      test_tokens = f"{text_contents}\n\nQ: {question}\nA:"
-      numtokens = count_tokens(test_tokens)
-      if numtokens<4090:
-        # Submit the question and document to ChatGPT (assuming you have the necessary openai setup done)
-        response = openai.Completion.create(
-          model="text-davinci-003",
-          prompt=f"{text_contents}\n\nQ: {question}\nA:",
-          max_tokens=1500,
-          n=1,
-          stop=None,
-          temperature=0.0
-        )
-        # Extract and display the answer
-        answer = response.choices[0].text.strip()
-        st.text_area("Answer:", value=answer, height=600)
-        st.markdown(disclaimer)
-        addrowtoGsheet(get_nested_query(querryarray))
-        st.markdown("NEW APP")
-      else:
-        st.error("Too many tokens submitted error! I am sorry, your query exceeds the model's capabilities. The maximum tokens must be 4097. You submitted: "+str(numtokens)+" Please change the question to reduce this.", icon="🚨")
-
+        test_tokens = f"{text_contents}\n\nQ: {question}\nA:"
+        numtokens = count_tokens(test_tokens)
+        if numtokens<4090:
+          # Submit the question and document to ChatGPT (assuming you have the necessary openai setup done)
+          response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=f"{text_contents}\n\nQ: {question}\nA:",
+            max_tokens=1500,
+            n=1,
+            stop=None,
+            temperature=0.0
+          )
+          # Extract and display the answer
+          answer = response.choices[0].text.strip()
+          st.text_area("Answer:", value=answer, height=600)
+          st.markdown(disclaimer)
+          addrowtoGsheet(get_nested_query(querryarray))
+          user_question = None
+          st.markdown("NEW APP")
+        else:
+          st.error("Too many tokens submitted error! I am sorry, your query exceeds the model's capabilities. The maximum tokens must be 4097. You submitted: "+str(numtokens)+" Please change the question to reduce this.", icon="🚨")
+          user_question = None
 
