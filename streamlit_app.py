@@ -224,6 +224,22 @@ def count_tokens(text):
     tokens = tiktoken.get_encoding(enc).encode(text)
     return len(tokens)
 
+def is_valid_api_key(api_key):
+    openai.api_key = api_key
+    try:
+        # Make a simple call to the completions endpoint
+        response = openai.Completion.create(
+          engine="davinci",
+          prompt="Translate the following English text to French: 'Hello, how are you?'",
+          max_tokens=60
+        )
+        return True
+    except openai.error.OpenAIError as e:
+        # Handle different types of errors (e.g., authentication, rate limits, etc.)
+        if "authentication" in str(e).lower():
+            return False
+        raise  # If it's another type of error, re-raise it
+
 
 ####################################################################
 # Check if API keys are defined, and ask for them if they are not. #
@@ -231,9 +247,10 @@ def count_tokens(text):
 if len(VECTARA_API_KEY)<2:
     VECTARA_API_KEY= st.text_input("Please enter a valid VECTARA API KEY to proceed.")
     st.text("If you provide an invalid key, this will not work and throw an error.")
-if len(OPENAI_API_KEY)<2:
+if len(OPENAI_API_KEY)<2 or is_valid_api_key(OPENAI_API_KEY)==False:
     OPENAI_API_KEY= st.text_input("Please enter a valid OPENAI KEY to proceed.")
     st.text("If you provide an invalid key, this will not work and throw an error.")
+    st.error("OpenAI API Key invalid.")
 
 #Nesting question handling here to avoid calling "espensive" OpenAI without an API KEY.
 if len(OPENAI_API_KEY)>5:
