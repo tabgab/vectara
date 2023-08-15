@@ -250,10 +250,12 @@ if len(VECTARA_API_KEY)<2:
 if len(OPENAI_API_KEY)<2 or is_valid_api_key(OPENAI_API_KEY)==False:
     OPENAI_API_KEY= st.text_input("Please enter a valid OPENAI KEY to proceed.")
     st.text("If you provide an invalid key, this will not work and throw an error.")
-    st.error("OpenAI API Key invalid.")
+    errortext = "OpenAI API Key invalid."
+    st.error(errortext)
 
 #Nesting question handling here to avoid calling "espensive" OpenAI without an API KEY.
 if is_valid_api_key(OPENAI_API_KEY)==True:
+  errortext = "OpenAI Key is now valid. Thank you."
   openai.api_key=OPENAI_API_KEY
   
   ######################################
