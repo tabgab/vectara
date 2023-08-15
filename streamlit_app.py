@@ -175,6 +175,13 @@ The complete OMNEST/OMNeT++ documentation, the INET Framework documentation, and
 If you check the checkbox for verbose data, you will also see what the Vectara
 database output was from the docs."""
 
+disclaimer = """We have tried to ensure the AI uses only the documentation to answer your question and do so as accurately as possible. 
+**Still, as with AI responses in general, the AI could be entirely wrong, just a bit wrong, or correct, but you should always check your 
+answers for errors.**
+
+**Use this entirely at your own risk, there is no warranty, implied or otherwise for the correctness of the answers, 
+or that this is fit for any use at all.**"""
+
 with st.expander("Display instructions"):
     st.markdown(instuctions)
 
@@ -247,6 +254,7 @@ if len(OPENAI_API_KEY)>5:
         # Extract and display the answer
         answer = response.choices[0].text.strip()
         st.text_area("Answer:", value=answer, height=600)
+        st.markdown(disclaimer)
       else:
         st.error("Too many tokens submitted error! I am sorry, your query exceeds the model's capabilities. The maximum tokens must be 4097. You submitted: "+str(numtokens)+" Please change the question to reduce this.", icon="🚨")
 
