@@ -34,7 +34,7 @@ sheet_url = st.secrets["public_gsheets_url"]
 rows = run_query(f'SELECT * FROM "{sheet_url}"')
 
 def addrowtoGsheet(rowtext):
-    GSHEETS_URL = st.secretsp['public_gsheets_url']
+    GSHEETS_URL = st.secrets['public_gsheets_url']
     client = gspread.authorize(credentials)
     sheet = client.open_by_url(GSHEETS_URL).sheet1
     sheet.update('B1', rowtext)
