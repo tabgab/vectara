@@ -6,15 +6,7 @@ import json
 import os
 import openai
 import tiktoken
-import pandas as pd
-from datetime import datetime
 
-#Load google sheet to insert question into. Collecting questions here.
-@st.cache_data(ttl=600)
-def load_data(sheets_url):
-    csv_url = sheets_url.replace("/edit#gid=", "/export?format=csv&gid=")
-    return pd.read_csv(csv_url)
-df = load_data(st.secrets["public_gsheets_url"])
 
 
 st.cache_data.clear()
@@ -263,11 +255,6 @@ if len(OPENAI_API_KEY)>5:
         answer = response.choices[0].text.strip()
         st.text_area("Answer:", value=answer, height=600)
         st.markdown(disclaimer)
-
-        #Storing answered question in Google Sheets
-        current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        new_row = {'Date': current_time, 'Question': get_nested_query(querryarray)}
-        df.loc[len(df)] = new_row
       else:
         st.error("Too many tokens submitted error! I am sorry, your query exceeds the model's capabilities. The maximum tokens must be 4097. You submitted: "+str(numtokens)+" Please change the question to reduce this.", icon="🚨")
 
