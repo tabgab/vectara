@@ -253,7 +253,7 @@ if len(OPENAI_API_KEY)<2 or is_valid_api_key(OPENAI_API_KEY)==False:
     st.error("OpenAI API Key invalid.")
 
 #Nesting question handling here to avoid calling "espensive" OpenAI without an API KEY.
-if len(OPENAI_API_KEY)>5:
+if is_valid_api_key(OPENAI_API_KEY)==True:
   openai.api_key=OPENAI_API_KEY
   
   ######################################
