@@ -40,7 +40,7 @@ def addrowtoGsheet(rowtext):
     sheet = client.open_by_url(GSHEETS_URL).sheet1
     #sheet.update('B1', rowtext)
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    sheet.append_row(current_time, rowtext)
+    sheet.append_row(list(current_time, rowtext))
     
     
 
