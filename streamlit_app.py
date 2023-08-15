@@ -276,7 +276,7 @@ if len(OPENAI_API_KEY)>5:
 
       test_tokens = f"{text_contents}\n\nQ: {question}\nA:"
       numtokens = count_tokens(test_tokens)
-      if numtokens<4097:
+      if numtokens<4090:
         # Submit the question and document to ChatGPT (assuming you have the necessary openai setup done)
         response = openai.Completion.create(
           model="text-davinci-003",
