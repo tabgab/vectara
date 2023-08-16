@@ -251,7 +251,6 @@ if len(OPENAI_API_KEY)<2 or is_valid_api_key(OPENAI_API_KEY)==False:
     OPENAI_API_KEY= st.text_input("Please enter a valid OPENAI KEY to proceed.")
     try:
        is_valid_api_key(OPENAI_API_KEY)==True
-       st.success("Valid API key entered!...")
     except ValueError:
        if is_valid_api_key(OPENAI_API_KEY)==False:  # Only show error if there's some input
         st.error("That's not a valid OpenAI API key!")
@@ -266,11 +265,11 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
   ######################################
   #   # Text input for user's question #
   ######################################
-  def disablebutton(b):
-      st.session_state["disabled"] =b
+  #def disablebutton(b):
+      #st.session_state["disabled"] =b
   
-  def enablebutton(b):
-      st.session_state["enabled"] = b
+  #def enablebutton(b):
+      #st.session_state["enabled"] = b
 
   user_question = st.text_input("Enter your question:")
 
