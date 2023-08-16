@@ -250,7 +250,7 @@ if len(VECTARA_API_KEY)<2:
 if len(OPENAI_API_KEY)<2 or is_valid_api_key(OPENAI_API_KEY)==False:
     OPENAI_API_KEY= st.text_input("Please enter a valid OPENAI KEY to proceed.")
     try:
-       is_valid_api_key()==False
+       is_valid_api_key(OPENAI_API_KEY)==False
        st.success("Valid API key entered!")
     except ValueError:
        if OPENAI_API_KEY:  # Only show error if there's some input
