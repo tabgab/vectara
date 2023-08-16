@@ -249,8 +249,14 @@ if len(VECTARA_API_KEY)<2:
     st.text("If you provide an invalid key, this will not work and throw an error.")
 if len(OPENAI_API_KEY)<2 or is_valid_api_key(OPENAI_API_KEY)==False:
     OPENAI_API_KEY= st.text_input("Please enter a valid OPENAI KEY to proceed.")
+    try:
+       is_valid_api_key()==False
+       st.success("Valid API key entered!")
+    except ValueError:
+       if OPENAI_API_KEY:  # Only show error if there's some input
+        st.error("That's not a valid OpenAI API key!")
     st.text("If you provide an invalid key, this will not work and throw an error.")
-    st.error("OpenAI API Key invalid.")
+    #st.error("OpenAI API Key invalid.")
 
 #Nesting question handling here to avoid calling "espensive" OpenAI without an API KEY.
 if is_valid_api_key(OPENAI_API_KEY)==True:
@@ -267,6 +273,7 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
       st.session_state["enabled"] = b
 
   user_question = st.text_input("Enter your question:")
+
   if user_question:
     #VERBOSE VECTARA OUTPUT HERE
     verbose = st.checkbox('Display verbose output with source text.')
