@@ -25,11 +25,11 @@ conn = connect(credentials=credentials)
 
 # Perform SQL query on the Google Sheet.
 # Uses st.cache_data to only rerun when the query changes or after 10 min.
-@st.cache_resource(ttl=6000)
-def run_query(query):
-    rows = conn.execute(query, headers=1)
-    rows = rows.fetchall()
-    return rows
+#@st.cache_resource(ttl=6000)
+#def run_query(query):
+    #rows = conn.execute(query, headers=1)
+    #rows = rows.fetchall()
+    #return rows
 
 sheet_url = st.secrets["public_gsheets_url"]
 rows = run_query(f'SELECT * FROM "{sheet_url}"')
@@ -265,11 +265,6 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
   ######################################
   #   # Text input for user's question #
   ######################################
-  #def disablebutton(b):
-      #st.session_state["disabled"] =b
-  
-  #def enablebutton(b):
-      #st.session_state["enabled"] = b
 
   user_question = st.text_input("Enter your question:")
 
