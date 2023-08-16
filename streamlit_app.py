@@ -31,8 +31,8 @@ conn = connect(credentials=credentials)
     #rows = rows.fetchall()
     #return rows
 
-sheet_url = st.secrets["public_gsheets_url"]
-rows = run_query(f'SELECT * FROM "{sheet_url}"')
+#sheet_url = st.secrets["public_gsheets_url"]
+#rows = run_query(f'SELECT * FROM "{sheet_url}"')
 
 def addrowtoGsheet(rowtext):
     GSHEETS_URL = st.secrets['public_gsheets_url']
