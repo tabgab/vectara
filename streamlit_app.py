@@ -251,9 +251,9 @@ if len(OPENAI_API_KEY)<2 or is_valid_api_key(OPENAI_API_KEY)==False:
     OPENAI_API_KEY= st.text_input("Please enter a valid OPENAI KEY to proceed.")
     try:
        is_valid_api_key(OPENAI_API_KEY)==True
-       st.success("Valid API key entered!")
+       st.success("Valid API key entered!...")
     except ValueError:
-       if OPENAI_API_KEY:  # Only show error if there's some input
+       if is_valid_api_key(OPENAI_API_KEY)==False:  # Only show error if there's some input
         st.error("That's not a valid OpenAI API key!")
     st.text("If you provide an invalid key, this will not work and throw an error.")
     #st.error("OpenAI API Key invalid.")
