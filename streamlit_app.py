@@ -312,7 +312,7 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
   #Audio input
   st.write("...or record an audio clip where you state your question in English to be transcribed.")
   audio = audiorecorder("Click to record", "RECORDING, click to stop.")
-  st.write("Length or audio (bytes): "+len(audio))
+  st.write("Length or audio (bytes): "+str(len(audio)))
   if len(audio) > 0:
         # To play audio in frontend:
         st.audio(audio.tobytes())
