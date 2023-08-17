@@ -307,13 +307,12 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
   ######################################
   #   # Text input for user's question #
   ######################################
-  st.write("You can either type a question (more accurate) or record an audio clip where you state your question in English to be transcribed.")
-  
-  #Text input
+  st.write("You can either type a question (more accurate)...")
   user_question = st.text_input("Enter your question:")
   #Audio input
+  st.write("...or record an audio clip where you state your question in English to be transcribed.")
   audio = audiorecorder("Click to record", "RECORDING, click to stop.")
-  st.write(len(audio))
+  st.write("Length or audio (bytes): "+len(audio))
   if len(audio) > 0:
         # To play audio in frontend:
         st.audio(audio.tobytes())
