@@ -5,3 +5,4 @@ tiktoken
 gsheetsdb==0.1.13.1
 oauth2
 gspread == 5.10.0
+streamlit-audiorecorder
