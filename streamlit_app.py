@@ -1,5 +1,6 @@
 
 import streamlit as st
+import streamlit.components.v1 as components
 from PIL import Image
 import requests
 import json
@@ -10,8 +11,54 @@ from google.oauth2 import service_account
 from gsheetsdb import connect
 import gspread
 from datetime import datetime
+from audiorecorder import audiorecorder
+from io import BytesIO
+from time import sleep
 
 st.cache_data.clear()
+
+#Stuff for recording audio and sending it to be recognized and transcribed.
+AssembyAI_API_KEY = st.secrets.AssembyAI_API_KEY
+file_path = "audio.wav"
+audioheaders = {
+    'authorization': AssembyAI_API_KEY, 
+    'content-type': 'application/json',
+}
+upload_endpoint = 'https://api.assemblyai.com/v2/upload'
+transcription_endpoint = "https://api.assemblyai.com/v2/transcript"
+
+def upload_to_assemblyai(file_path):
+
+    def read_audio(file_path):
+
+        with open(file_path, 'rb') as f:
+            while True:
+                data = f.read(5_242_880)
+                if not data:
+                    break
+                yield data
+
+    upload_response =  requests.post(upload_endpoint, 
+                                     headers=audioheaders, 
+                                     data=read_audio(file_path))
+
+    return upload_response.json().get('upload_url')
+
+def get_transcription_result(transcription_id): 
+
+    current_status = "queued"
+
+    endpoint = f"https://api.assemblyai.com/v2/transcript/{transcription_id}"
+
+    while current_status not in ("completed", "error"):
+        
+        response = requests.get(endpoint, headers=audioheaders)
+        current_status = response.json()['status']
+        
+        if current_status in ("completed", "error"):
+            return response.json()['text']
+        else:
+            sleep(10)
 
 # Create a connection object.
 credentials = service_account.Credentials.from_service_account_info(
@@ -22,18 +69,6 @@ credentials = service_account.Credentials.from_service_account_info(
 )
 conn = connect(credentials=credentials)
 
-
-# Perform SQL query on the Google Sheet.
-# Uses st.cache_data to only rerun when the query changes or after 10 min.
-#@st.cache_resource(ttl=6000)
-#def run_query(query):
-    #rows = conn.execute(query, headers=1)
-    #rows = rows.fetchall()
-    #return rows
-
-#sheet_url = st.secrets["public_gsheets_url"]
-#rows = run_query(f'SELECT * FROM "{sheet_url}"')
-
 def addrowtoGsheet(rowtext):
     GSHEETS_URL = st.secrets['public_gsheets_url']
     client = gspread.authorize(credentials)
@@ -42,8 +77,6 @@ def addrowtoGsheet(rowtext):
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     rowvalues = [current_time, rowtext]
     sheet.append_row(rowvalues)
-    
-    
 
 # Using Streamlit's caching mechanism to load environment variables and keep them in memory
 @st.cache_data(ttl=360000)
@@ -57,14 +90,14 @@ def load_env_vars():
         "VECTARA_API_KEY": os.getenv('VECTARA_API_KEY')
     }
 
-
-
-#Changed from env_vars to the streamlit secrets system for streamlit deployment.
-#env_vars = load_env_vars()
+#OpenAI
 OPENAI_API_KEY = st.secrets.OPENAI_API_KEY
+#Vectara is where the documents live.
 VECTARA_CUSTOMER_ID = st.secrets.VECTARA_CUSTOMER_ID
 VECTARA_CORPUS_ID = st.secrets.VECTARA_CORPUS_ID
 VECTARA_API_KEY = st.secrets.VECTARA_API_KEY
+#This is the transcribing service
+AssembyAI_API_KEY = st.secrets.AssembyAI_API_KEY
 
 if OPENAI_API_KEY==None:
     OPENAI_API_KEY = ""
@@ -265,8 +298,30 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
   ######################################
   #   # Text input for user's question #
   ######################################
-
+  st.write("You can either type a question (more accurate) or record an audio clip where you state your question in English to be transcribed.")
+  
+  #Text input
   user_question = st.text_input("Enter your question:")
+  #Audio input
+  audio = audiorecorder("Click to record", "Recording...")
+  st.write(len(audio))
+  if len(audio) > 0:
+        # To play audio in frontend:
+        st.audio(audio.tobytes())
+        
+        # To save audio to a file:
+        wav_file = open(file_path, "wb")
+        wav_file.write(audio.tobytes())
+
+        #record_audio(file_path)
+
+        upload_url = upload_to_assemblyai(file_path)
+        st.write('Prompt uploaded to AssemblyAI')
+
+        transcription_id = transcribe(upload_url)
+        st.write('Prompt Sent for Transciption to AssemblyAI')
+
+        user_question = get_transcription_result(transcription_id)
 
   if user_question:
     #VERBOSE VECTARA OUTPUT HERE
