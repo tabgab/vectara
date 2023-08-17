@@ -44,6 +44,15 @@ def upload_to_assemblyai(file_path):
 
     return upload_response.json().get('upload_url')
 
+def transcribe(upload_url): 
+
+    json = {"audio_url": upload_url}
+    
+    response = requests.post(transcription_endpoint, json=json, headers=audioheaders)
+    transcription_id = response.json()['id']
+
+    return transcription_id
+
 def get_transcription_result(transcription_id): 
 
     current_status = "queued"
