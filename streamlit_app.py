@@ -312,7 +312,7 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
   #Text input
   user_question = st.text_input("Enter your question:")
   #Audio input
-  audio = audiorecorder("Click to record", "Recording...")
+  audio = audiorecorder("Click to record", "RECORDING, click to stop.")
   st.write(len(audio))
   if len(audio) > 0:
         # To play audio in frontend:
@@ -331,14 +331,15 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
         st.write('Prompt Sent for Transciption to AssemblyAI')
 
         user_question = get_transcription_result(transcription_id)
+        st.write("Questions is: " + user_question)
 
   if user_question:
     #VERBOSE VECTARA OUTPUT HERE
     verbose = st.checkbox('Display verbose output with source text.')
 
-    if st.button("Submit"):
+    if st.button("Click here to submit the question for processing."):
         set_nested_query(querryarray, user_question)
-        st.write("Questions is: " + get_nested_query(querryarray))
+        #st.write("Questions is: " + get_nested_query(querryarray))
       
         # Sending query to Vectara here
         response = requests.request("POST", url, headers=headers, data=json.dumps(querryarray))
