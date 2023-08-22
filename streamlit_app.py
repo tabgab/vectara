@@ -362,7 +362,7 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
         if numtokens<4097:
           # Submit the question and document to ChatGPT (assuming you have the necessary openai setup done)
           response = openai.Completion.create(
-            model="gpt-4-32k",
+            model="gpt-4",
             prompt=f"{text_contents}\n\nQ: {question}\nA:",
             max_tokens=1500,
             n=1,
