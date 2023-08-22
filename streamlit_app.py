@@ -281,8 +281,6 @@ def is_valid_api_key(api_key):
         if "authentication" in str(e).lower():
             return False
         
-
-
 ####################################################################
 # Check if API keys are defined, and ask for them if they are not. #
 ####################################################################
@@ -359,8 +357,9 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
         question = prelude + originalquestion + afterwords
 
         test_tokens = f"{text_contents}\n\nQ: {question}\nA:"
-        numtokens = count_tokens(test_tokens)
-        if numtokens<4090:
+        numtokens = count_tokens(question+text_contents)
+        st.write("Tokens: ",numtokens)
+        if numtokens<4097:
           # Submit the question and document to ChatGPT (assuming you have the necessary openai setup done)
           response = openai.Completion.create(
             model="text-davinci-003",
