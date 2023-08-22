@@ -357,7 +357,8 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
         question = prelude + originalquestion + afterwords
 
         test_tokens = f"{text_contents}\n\nQ: {question}\nA:"
-        numtokens = count_tokens(question)
+        numtokens = count_tokens(question+text_contents)
+        st.write("Tokens: ",numtokens)
         if numtokens<4097:
           # Submit the question and document to ChatGPT (assuming you have the necessary openai setup done)
           response = openai.Completion.create(
