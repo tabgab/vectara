@@ -360,7 +360,7 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
         test_tokens = f"{text_contents}\n\nQ: {question}\nA:"
         numtokens = count_tokens(question+text_contents)
         st.write("Tokens: ",numtokens)
-        if numtokens<4097:
+        if numtokens<16000:
           # Submit the question and document to ChatGPT (assuming you have the necessary openai setup done)
           #Changed model from text-davinci-003 to 002. It has 16K tokens instead of 4K and 003 is deprecated.
           #Trying to use 10K tokens as max instead of 1,5K. Might need to adjust vectara extraction to have enough to feed it.
@@ -380,6 +380,6 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
           #user_question = None
           st.markdown("NEW APP 16K")
         else:
-          st.error("Too many tokens submitted error! I am sorry, your query exceeds the model's capabilities. The maximum tokens must be 4097. You submitted: "+str(numtokens)+" Please change the question to reduce this.", icon="🚨")
+          st.error("Too many tokens submitted error! I am sorry, your query exceeds the model's capabilities. The maximum tokens must be 16000. You submitted: "+str(numtokens)+" Please change the question to reduce this.", icon="🚨")
           #user_question = None
 
