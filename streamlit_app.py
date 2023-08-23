@@ -122,12 +122,12 @@ querryarray = {
     {
       "query": "Default question?",
       "start": 0,
-      "numResults": 20,
+      "numResults": 10,
       "contextConfig": {
-        "charsBefore": 50,
-        "charsAfter": 50,
-        "sentencesBefore": 6,
-        "sentencesAfter": 6,
+        "charsBefore": 30,
+        "charsAfter": 30,
+        "sentencesBefore": 3,
+        "sentencesAfter": 3,
         "startTag": "<b>",
         "endTag": "</b>"
       },
