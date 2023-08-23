@@ -378,7 +378,7 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
           st.markdown(disclaimer)
           addrowtoGsheet(get_nested_query(querryarray))
           #user_question = None
-          st.markdown("NEW APP")
+          st.markdown("NEW APP 16K")
         else:
           st.error("Too many tokens submitted error! I am sorry, your query exceeds the model's capabilities. The maximum tokens must be 4097. You submitted: "+str(numtokens)+" Please change the question to reduce this.", icon="🚨")
           #user_question = None
