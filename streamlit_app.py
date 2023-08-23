@@ -372,7 +372,7 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
             max_tokens=6000,
             n=1,
             stop=None,
-            temperature=0.0
+            temperature=0.7
           )
           # Extract and display the answer
           answer = response.choices[0].text.strip()
