@@ -112,6 +112,7 @@ if OPENAI_API_KEY==None:
     OPENAI_API_KEY = ""
 
 # Initialize the OpenAI API with the key
+# Making changes to this to ensure we have enough material to feed the more powerful AI model with 16K tokens.
 openai.api_key = OPENAI_API_KEY
 
 url = "https://api.vectara.io/v1/query"
@@ -121,12 +122,12 @@ querryarray = {
     {
       "query": "Default question?",
       "start": 0,
-      "numResults": 10,
+      "numResults": 20,
       "contextConfig": {
-        "charsBefore": 30,
-        "charsAfter": 30,
-        "sentencesBefore": 3,
-        "sentencesAfter": 3,
+        "charsBefore": 50,
+        "charsAfter": 50,
+        "sentencesBefore": 6,
+        "sentencesAfter": 6,
         "startTag": "<b>",
         "endTag": "</b>"
       },
@@ -361,10 +362,12 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
         st.write("Tokens: ",numtokens)
         if numtokens<4097:
           # Submit the question and document to ChatGPT (assuming you have the necessary openai setup done)
+          #Changed model from text-davinci-003 to 002. It has 16K tokens instead of 4K and 003 is deprecated.
+          #Trying to use 10K tokens as max instead of 1,5K. Might need to adjust vectara extraction to have enough to feed it.
           response = openai.Completion.create(
-            model="text-davinci-003",
+            model="text-davinci-002",
             prompt=f"{text_contents}\n\nQ: {question}\nA:",
-            max_tokens=1500,
+            max_tokens=10000,
             n=1,
             stop=None,
             temperature=0.0
