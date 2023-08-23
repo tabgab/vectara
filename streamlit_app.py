@@ -367,7 +367,7 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
           response = openai.Completion.create(
             model="davinci-002",
             prompt=f"{text_contents}\n\nQ: {question}\nA:",
-            max_tokens=10000,
+            max_tokens=6000,
             n=1,
             stop=None,
             temperature=0.0
