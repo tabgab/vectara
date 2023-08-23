@@ -351,8 +351,8 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
               st.text_area(text_contents)
 
         # Assemble the query for the AI
-        prelude = ("Give a detailed and factual answer of at least 150 words to the question"
-                  ",give the relevant section names in the documentation whenever possible: ")
+        prelude = ("Give a detailed and factual answer to the question, summarize wherever possible, but give details where necessary."
+                  ",Give the relevant section names in the documentation whenever possible: ")
         afterwords = "Do not make up anything, use the provided text prompt only! Please list the exact refrences you use."
         originalquestion = get_nested_query(querryarray)
         question = prelude + originalquestion + afterwords
