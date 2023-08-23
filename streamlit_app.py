@@ -351,11 +351,11 @@ if is_valid_api_key(OPENAI_API_KEY)==True:
               st.text_area(text_contents)
 
         # Assemble the query for the AI
-        prelude = ("""Give a detailed and factual answer to the question, summarize wherever possible, but give details where necessary."
-                  ",Give the relevant section names in the documentation whenever possible: """)
-        afterwords = ("""Do not make up anything, use the provided text prompt only! 
+        prelude = """Give a detailed and factual answer to the question, summarize wherever possible, but give details where necessary."
+                   Summarize your answer in a maximum of 400 words. Give the relevant section names in the documentation whenever possible: """
+        afterwords = """Do not make up anything, use the provided text prompt only! 
         The input you receive along with the user question may contain question "Q:" and answer "A:" pairs. Do not quite these verbatim, but deduce their meaning and use that in your answer.
-        Please list the exact refrences you use.""")
+        Please list the exact refrences you use."""
         originalquestion = get_nested_query(querryarray)
         question = prelude + originalquestion + afterwords
 
